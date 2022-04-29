@@ -1,0 +1,22 @@
+{
+    "name": "notiontojekylljs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "build": "tsc",
+        "dev": "npm run build && node dist/app.js"
+    },
+    "author": "Luiz Souza",
+    "license": "ISC",
+    "dependencies": {
+        "@notionhq/client": "^1.0.4",
+        "@octokit/rest": "^18.12.0",
+        "dotenv": "^16.0.0",
+        "front-matter": "^4.0.2"
+    },
+    "devDependencies": {
+        "typescript": "^4.6.3"
+    }
+}
