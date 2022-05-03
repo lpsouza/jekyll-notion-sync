@@ -1,5 +1,5 @@
 {
-    "name": "notiontojekylljs",
+    "name": "jekyll-notion-sync",
     "version": "1.0.0",
     "description": "",
     "main": "app.js",
