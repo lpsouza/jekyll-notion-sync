@@ -110,9 +110,8 @@ export class JekyllService {
         const repo = this.github.repo;
         const path = this.github.path;
         const postsOnGithub = (await this.octokit.rest.repos.getContent({ owner, repo, path })).data as any[];
-        const postsOnGithubDebug = [postsOnGithub[0], postsOnGithub[1], postsOnGithub[2]];
         const posts = [];
-        for (const post of postsOnGithubDebug) {
+        for (const post of postsOnGithub) {
             const filename = post.name;
             const sha = post.sha;
             const contentEncoded = await (await this.octokit.rest.repos.getContent({ owner, repo, path: `${path}/${post.name}` })).data['content'];
