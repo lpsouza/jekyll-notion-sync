@@ -99,7 +99,6 @@ export class JekyllService {
                     break;
 
                 default:
-                    // console.log(JSON.stringify(block, null, 2));
                     break;
             }
         });

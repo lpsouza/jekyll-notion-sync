@@ -59,17 +59,4 @@ export class NotionService {
         const properties = postNotion['properties'];
         return this.notion.pages.create({ parent, cover, properties, children });
     }
-    // async updatePost(post: any) {
-    //     const page_id = post.id;
-    //     const postNotion = await this.parser(post);
-    //     const parent = postNotion['parent'];
-    //     const cover = postNotion['cover'];
-    //     const children = postNotion['children'];
-    //     const properties = postNotion['properties'];
-    //     // this.notion.pages.update({ page_id, cover, properties });
-    //     for (const child of children) {
-    //         // this.notion.blocks.update({ block_id: page_id,  });
-    //         console.log(child);
-    //     }
-    // }
 }
