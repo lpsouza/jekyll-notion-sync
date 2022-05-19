@@ -3,8 +3,7 @@ dotenv.config();
 
 import { NotionService } from './services/NotionService';
 import { JekyllService } from './services/JekyllService';
-// import table from 'cli-table';
-// import color from 'cli-color';
+import table from 'cli-table';
 
 
 
@@ -12,10 +11,11 @@ import { JekyllService } from './services/JekyllService';
     const notion = new NotionService();
     const jekyll = new JekyllService();
 
-    // let countOk = 0;
-    // let countNo = 0;
-    // let countSkip = 0;
-    // const filesNo = [];
+    const counters = {
+        newPostsOnNotion: 0,
+        newPostsOnJekyll: 0,
+        updatedPostsOnJekyll: 0
+    };
 
     const jekyllPosts = await jekyll.getPosts();
     const notionPosts = await notion.getPosts();
@@ -27,6 +27,7 @@ import { JekyllService } from './services/JekyllService';
         for (const post of jekyllPostsNotInNotion) {
             const newPost = await notion.createPost(post);
             await jekyll.updatePost(newPost, post.filename, post.sha);
+            counters.newPostsOnNotion++;
         }
     }
     if (jekyllPostsInNotion.length > 0) {
@@ -34,21 +35,17 @@ import { JekyllService } from './services/JekyllService';
             const jekyllPost = jekyllPostsInNotion.find(jekyllPost => jekyllPost.content['attributes'].notion_id === post.id);
             if (jekyllPost == null) {
                 await jekyll.createPost(post);
+                counters.newPostsOnJekyll++;
             } else if (new Date(jekyllPost.content['attributes'].last_modified_at) < new Date(post['properties']['Modified']['last_edited_time'])) {
                 await jekyll.updatePost(post, jekyllPost.filename, jekyllPost.sha);
+                counters.updatedPostsOnJekyll++;
             }
         }
     }
 
-    // const status = new table();
-    // status.push(['Processed posts', color.green(countOk)]);
-    // status.push(['Posts with errors', color.red(countNo)]);
-    // status.push(['Skipped posts', color.yellow(countSkip)]);
-    // console.log(status.toString());
-
-    // if (filesNo.length > 0) {
-    //     const files = new table({ head: [color.red('File on error')] });
-    //     filesNo.forEach(file => files.push([file]));
-    //     console.log(files.toString());
-    // }
+    const status = new table();
+    status.push(['New posts on Jekyll', counters.newPostsOnJekyll]);
+    status.push(['New posts on Notion', counters.newPostsOnNotion]);
+    status.push(['Updated posts on Jekyll', counters.updatedPostsOnJekyll]);
+    console.log(status.toString());
 })();
