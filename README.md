@@ -22,7 +22,7 @@ docker run --rm -it -e NOTION_TOKEN=<token> -e NOTION_USER=<user> -e GITHUB_TOKE
 ### Deploying this container on kubernetes cronjob
 
 ```bash
-kubectl create -f <(cat <<EOF
+kubectl create -f - <<EOF
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -52,5 +52,4 @@ spec:
                 - name: GITHUB_PATH
                   value: <path>
 EOF
-)
 ```
