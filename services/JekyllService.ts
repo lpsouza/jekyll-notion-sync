@@ -105,6 +105,9 @@ export class JekyllService {
 
         return content;
     }
+    createFilename(post: IJekyllPost): string {
+        return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text']).toLowerCase()}.md`;
+    }
     async getPosts(): Promise<IJekyllPost[]> {
         const owner = this.github.owner;
         const repo = this.github.repo;
@@ -124,7 +127,7 @@ export class JekyllService {
         const owner = this.github.owner;
         const repo = this.github.repo;
         const path = this.github.path;
-        const filename = `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text']).toLowerCase()}.md`;
+        const filename = this.createFilename(post);
         const content = await this.parser(post);
         try {
             this.octokit.rest.repos.createOrUpdateFileContents({ owner, repo, path: `${path}/${filename}`, message: `Create ${filename}`, content: Buffer.from(content).toString('base64') });

@@ -37,7 +37,7 @@ import table from 'cli-table';
                 await jekyll.createPost(post);
                 counters.newPostsOnJekyll++;
             } else if (new Date(jekyllPost.content['attributes'].last_modified_at) < new Date(post['properties']['Modified']['last_edited_time'])) {
-                await jekyll.updatePost(post, jekyllPost.filename, jekyllPost.sha);
+                await jekyll.updatePost(post, jekyll.createFilename(post), jekyllPost.sha);
                 counters.updatedPostsOnJekyll++;
             }
         }
