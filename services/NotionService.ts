@@ -41,12 +41,22 @@ export class NotionService {
         const notionPost = { parent, cover, children, properties };
         return notionPost;
     }
-    async getPosts() {
+    async getPosts(): Promise<any[]> {
         const databaseId = await this.getDatabaseId();
-        const posts = (await this.notion.databases.query({ database_id: databaseId })).results.map((post: any) => post);
-        return posts;
+        let db = await this.notion.databases.query({ database_id: databaseId });
+        let posts = db.results.map((post: any) => post);
+        let hasMore = db.has_more;
+        while (hasMore) {
+            db = await this.notion.databases.query({ database_id: databaseId, start_cursor: db.next_cursor });
+            posts.push(...db.results.map((post: any) => post));
+            hasMore = db.has_more;
+        }
+        posts = posts.sort((a: any, b: any) => {
+            return new Date(b['properties']['Created']['date']['start']).getTime() - new Date(a['properties']['Created']['date']['start']).getTime();
+        });
+        return posts.filter((post: any) => post['properties']['Published']['checkbox']);
     }
-    async getDatabaseId() {
+    async getDatabaseId(): Promise<string> {
         const database = await this.notion.search({ filter: { property: 'object', value: 'database' } });
         const databaseId = database.results[0].id;
         return databaseId;
