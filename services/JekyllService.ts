@@ -101,6 +101,40 @@ export class JekyllService {
                     }
                     break;
 
+                case 'bulleted_list_item':
+                    const bulletedListItemRichText = block['bulleted_list_item']['rich_text'];
+                    content += '- ';
+                    if (bulletedListItemRichText.length > 0) {
+                        bulletedListItemRichText.forEach(text => {
+                            content += text['href'] == null ? text['plain_text'] : `[${text['plain_text']}](${text['href']})`;
+                        });
+                        content += blocks[i + 1]['type'] == 'bulleted_list_item' ? '\n' : '\n\n';
+                    }
+                    break;
+
+                case 'numbered_list_item':
+                    const numberedListItemRichText = block['numbered_list_item']['rich_text'];
+                    content += '1. ';
+                    if (numberedListItemRichText.length > 0) {
+                        numberedListItemRichText.forEach(text => {
+                            content += text['href'] == null ? text['plain_text'] : `[${text['plain_text']}](${text['href']})`;
+                        });
+                        content += blocks[i + 1]['type'] == 'numbered_list_item' ? '\n' : '\n\n';
+                    }
+                    break;
+
+                case 'code':
+                    const codeRichText = block['code']['rich_text'];
+                    const language = block['code']['language'] != 'plain text' ? block['code']['language'] : '';
+                    content += `\`\`\`${language}\n`;
+                    if (codeRichText.length > 0) {
+                        codeRichText.forEach(text => {
+                            content += text['href'] == null ? text['plain_text'] : `[${text['plain_text']}](${text['href']})`;
+                        });
+                    }
+                    content += '\n```\n\n';
+                    break;
+
                 default:
                     break;
             }
