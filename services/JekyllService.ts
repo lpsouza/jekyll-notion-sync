@@ -87,11 +87,13 @@ export class JekyllService {
                     }
                     switch (block['image']['type']) {
                         case 'file':
-                            content += `![${caption}](${block['image']['file']['url']})\n\n`;
+                            content += `![${caption}](${block['image']['file']['url']})`;
+                            content += caption != '' ? `\n${caption}\n\n` : '\n\n';
                             break;
 
                         case 'external':
-                            content += `![${caption}](${block['image']['external']['url']})\n\n`;
+                            content += `![${caption}](${block['image']['external']['url']})`;
+                            content += caption != '' ? `\n${caption}\n\n` : '\n\n';
                             break;
 
                         default:
