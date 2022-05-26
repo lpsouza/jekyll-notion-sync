@@ -54,7 +54,8 @@ export class JekyllService {
         content += '---\n\n';
         const postBlocks = await this.notion.blocks.children.list({ block_id: post.id });
         const blocks = postBlocks.results.map(block => block);
-        blocks.forEach(block => {
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
             switch (block['type']) {
                 case 'paragraph':
                     const paragraphRichText = block['paragraph']['rich_text'];
@@ -101,7 +102,7 @@ export class JekyllService {
                 default:
                     break;
             }
-        });
+        };
 
         return content;
     }
