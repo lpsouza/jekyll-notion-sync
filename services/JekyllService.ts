@@ -135,6 +135,17 @@ export class JekyllService {
                     content += '\n```\n\n';
                     break;
 
+                case 'quote':
+                    const quoteRichText = block['quote']['rich_text'];
+                    content += '> ';
+                    if (quoteRichText.length > 0) {
+                        quoteRichText.forEach(text => {
+                            content += text['href'] == null ? text['plain_text'] : `[${text['plain_text']}](${text['href']})`;
+                        });
+                        content += '\n\n';
+                    }
+                    break;
+
                 default:
                     break;
             }
