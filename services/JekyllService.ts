@@ -85,20 +85,8 @@ export class JekyllService {
                             caption += text['href'] == null ? text['plain_text'] : `[${text['plain_text']}](${text['href']})`;
                         });
                     }
-                    switch (block['image']['type']) {
-                        case 'file':
-                            content += `![${caption}](${block['image']['file']['url']})`;
-                            content += caption != '' ? `\n${caption}\n\n` : '\n\n';
-                            break;
-
-                        case 'external':
-                            content += `![${caption}](${block['image']['external']['url']})`;
-                            content += caption != '' ? `\n${caption}\n\n` : '\n\n';
-                            break;
-
-                        default:
-                            break;
-                    }
+                    content += `![${caption}](${block['image'][block['image']['type']]['url']})`;
+                    content += caption != '' ? `\n<span class="caption">${caption}</span>\n\n` : '\n\n';
                     break;
 
                 case 'bulleted_list_item':
