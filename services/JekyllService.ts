@@ -39,7 +39,7 @@ export class JekyllService {
             published: post['properties']['Published']['checkbox'],
             title: post['properties']['Title']['title'][0]['plain_text'],
             tags: [],
-            image: post['cover'] != null ? post['cover']['external']['url'] : null,
+            image: post['cover'] != null ? post['cover'][post['cover']['type']]['url'] : null,
         }
 
         const tags = post['properties']['Tags']['multi_select'];
