@@ -8,44 +8,53 @@ import table from 'cli-table';
 
 
 (async () => {
-    const notion = new NotionService();
-    const jekyll = new JekyllService();
+    try {
+        const notion = new NotionService();
+        const jekyll = new JekyllService();
 
-    const counters = {
-        newPostsOnNotion: 0,
-        newPostsOnJekyll: 0,
-        updatedPostsOnJekyll: 0
-    };
+        const counters = {
+            newPostsOnNotion: 0,
+            newPostsOnJekyll: 0,
+            updatedPostsOnJekyll: 0
+        };
 
-    const jekyllPosts = await jekyll.getPosts();
-    const notionPosts = await notion.getPosts();
+        console.log('Starting sync...');
 
-    const jekyllPostsNotInNotion = jekyllPosts.filter(post => post.content['attributes'].notion_id == null);
-    const jekyllPostsInNotion = jekyllPosts.filter(post => post.content['attributes'].notion_id != null);
+        const jekyllPosts = await jekyll.getPosts();
+        const notionPosts = await notion.getPosts();
 
-    if (jekyllPostsNotInNotion.length > 0) {
-        for (const post of jekyllPostsNotInNotion) {
-            const newPost = await notion.createPost(post);
-            await jekyll.updatePost(newPost, post.filename, post.sha);
-            counters.newPostsOnNotion++;
-        }
-    }
-    if (jekyllPostsInNotion.length > 0) {
-        for (const post of notionPosts) {
-            const jekyllPost = jekyllPostsInNotion.find(jekyllPost => jekyllPost.content['attributes'].notion_id === post.id);
-            if (jekyllPost == null) {
-                await jekyll.createPost(post);
-                counters.newPostsOnJekyll++;
-            } else if (new Date(jekyllPost.content['attributes'].last_modified_at) < new Date(post['properties']['Modified']['last_edited_time'])) {
-                await jekyll.updatePost(post, jekyll.createFilename(post), jekyllPost.sha);
-                counters.updatedPostsOnJekyll++;
+        const jekyllPostsNotInNotion = jekyllPosts.filter(post => post.content['attributes'].notion_id == null);
+        const jekyllPostsInNotion = jekyllPosts.filter(post => post.content['attributes'].notion_id != null);
+
+        console.log('Checking for new posts on Notion...');
+        if (jekyllPostsNotInNotion.length > 0) {
+            for (const post of jekyllPostsNotInNotion) {
+                const newPost = await notion.createPost(post);
+                await jekyll.updatePost(newPost, post.filename, post.sha);
+                counters.newPostsOnNotion++;
             }
         }
-    }
 
-    const status = new table();
-    status.push(['New posts on Jekyll', counters.newPostsOnJekyll]);
-    status.push(['New posts on Notion', counters.newPostsOnNotion]);
-    status.push(['Updated posts on Jekyll', counters.updatedPostsOnJekyll]);
-    console.log(status.toString());
+        console.log('Checking for new posts on Jekyll...');
+        if (jekyllPostsInNotion.length > 0) {
+            for (const post of notionPosts) {
+                const jekyllPost = jekyllPostsInNotion.find(jekyllPost => jekyllPost.content['attributes'].notion_id === post.id);
+                if (jekyllPost == null) {
+                    await jekyll.createPost(post);
+                    counters.newPostsOnJekyll++;
+                } else if (new Date(jekyllPost.content['attributes'].last_modified_at) < new Date(post['properties']['Modified']['last_edited_time'])) {
+                    await jekyll.updatePost(post, jekyll.createFilename(post), jekyllPost.sha);
+                    counters.updatedPostsOnJekyll++;
+                }
+            }
+        }
+
+        const status = new table();
+        status.push(['New posts on Jekyll', counters.newPostsOnJekyll]);
+        status.push(['New posts on Notion', counters.newPostsOnNotion]);
+        status.push(['Updated posts on Jekyll', counters.updatedPostsOnJekyll]);
+        console.log(status.toString());
+    } catch (error) {
+        console.log(JSON.stringify(error, null, 2));
+    }
 })();
