@@ -142,7 +142,7 @@ export class JekyllService {
         return content;
     }
     createFilename(post: IJekyllPost): string {
-        return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text']).toLowerCase()}.md`;
+        return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text'], { locale: 'pt', remove: /[*+~.()'"!?:@]/g }).toLowerCase()}.md`;
     }
     async getPosts(): Promise<IJekyllPost[]> {
         const owner = this.github.owner;
