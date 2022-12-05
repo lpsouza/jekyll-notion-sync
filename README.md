@@ -6,12 +6,17 @@ This is a Docker container that syncs your Jekyll site using Notion.
 
 To use this container, you need to use some environment variables:
 
-- `NOTION_TOKEN`: The token to access Notion.
-- `NOTION_USER`: The owner of the Notion page.
-- `GITHUB_TOKEN`: The token to access GitHub.
+- `NOTION_TOKEN`: The [token](https://www.notion.so/my-integrations) to access Notion.
+- `NOTION_USER`: The owner ID of the Notion page.
+- `GITHUB_TOKEN`: The [token](https://github.com/settings/tokens) to access GitHub.
 - `GITHUB_OWNER`: The owner of the GitHub repository.
 - `GITHUB_REPO`: The name of the GitHub repository containsing the Jekyll site.
 - `GITHUB_PATH`: The path to the Jekyll posts directory.
+
+Notes:
+
+- The GITHUB_TOKEN must have the Jekyll site repository as a scope.
+- To get the owner ID, you can use the [Notion API](https://developers.notion.com/reference/get-users).
 
 ### Deploying this container using Docker
 
