@@ -23,8 +23,8 @@ export class NotionService {
         properties['Tags'] = { multi_select: [] };
 
         if (post.content['attributes']['tags']) {
-            post.content['attributes']['tags'].forEach((tag: any) => {
-                properties['Tags']['multi_select'].push({ name: tag });
+            post.content['attributes']['tags'].forEach((tag: string) => {
+                properties['Tags']['multi_select'].push({ name: tag.toLowerCase().trim() });
             });
         }
 
