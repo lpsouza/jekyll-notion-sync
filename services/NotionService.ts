@@ -42,7 +42,6 @@ export class NotionService {
         return notionPost;
     }
     async getPosts(): Promise<any[]> {
-        console.log('Getting posts from Notion...');
         const databaseId = await this.getDatabaseId();
         let db = await this.notion.databases.query({ database_id: databaseId });
         let posts = db.results.map((post: any) => post);

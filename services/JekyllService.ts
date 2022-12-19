@@ -145,7 +145,6 @@ export class JekyllService {
         return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text'], { locale: 'pt', remove: /[*+~.()'"!?:@]/g }).toLowerCase()}.md`;
     }
     async getPosts(): Promise<IJekyllPost[]> {
-        console.log('Getting posts from Jekyll...');
         const owner = this.github.owner;
         const repo = this.github.repo;
         const path = this.github.path;
