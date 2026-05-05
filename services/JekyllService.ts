@@ -47,10 +47,8 @@ export class JekyllService {
             frontMatter.tags.push(tag['name']);
         });
 
-        const yaml = new YAML.Document();
-        yaml.contents = frontMatter;
         let content = '---\n';
-        content += yaml.toString();
+        content += YAML.stringify(frontMatter);
         content += '---\n\n';
         const postBlocks = await this.notion.blocks.children.list({ block_id: post.id });
         const blocks = postBlocks.results.map(block => block);
@@ -142,7 +140,7 @@ export class JekyllService {
         return content;
     }
     createFilename(post: IJekyllPost): string {
-        return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text'], { locale: 'pt', remove: /[*+~.()'"!?:@]/g }).toLowerCase()}.md`;
+        return `${new Date(post['properties']['Created']['date']['start']).toISOString().split('T')[0]}-${slugify(post['properties']['Title']['title'][0]['plain_text'], { locale: 'pt', remove: /[[...]
     }
     async getPosts(): Promise<IJekyllPost[]> {
         const owner = this.github.owner;
@@ -182,4 +180,4 @@ export class JekyllService {
             console.log(error.message);
         }
     }
-}
+ }
